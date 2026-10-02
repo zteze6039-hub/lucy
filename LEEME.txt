@@ -1,0 +1,18 @@
+LUCY — PÁGINA WEB DEL PROTOTIPO
+
+Contenido:
+- index.html
+- lucy.apk
+- lucy-centro-de-mando.png
+- dc-laboratorio.jpg
+- circuito-neon.jpeg
+
+IMPORTANTE:
+Todos los archivos deben permanecer en la misma carpeta para que el botón
+"Descargar APK" funcione.
+
+El index.html ya apunta directamente a:
+    lucy.apk
+
+La página presenta LUCY como un prototipo funcional y deja claro que la
+versión completa continúa en desarrollo.

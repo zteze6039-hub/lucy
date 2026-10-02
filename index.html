@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#050713">
+<meta name="description" content="LUCY — prototipo funcional de asistente inteligente de DC Laboratorio.">
+<title>LUCY — El comienzo de una nueva asistente inteligente</title>
+<style>
+:root{
+  --bg:#040611;--panel:#0b1024;--panel2:#101735;--cyan:#31e8ff;
+  --blue:#6388ff;--violet:#a66bff;--pink:#ff45d8;--white:#f7f9ff;
+  --muted:#aab4d0;--line:#ffffff16;--good:#57f2ba
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+ margin:0;color:var(--white);font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;
+ background:
+ radial-gradient(circle at 80% 5%,#34208055,transparent 30%),
+ radial-gradient(circle at 0 35%,#003c5d55,transparent 35%),var(--bg);
+ overflow-x:hidden
+}
+body:before{
+ content:"";position:fixed;inset:0;pointer-events:none;opacity:.18;
+ background-image:linear-gradient(#fff 1px,transparent 1px),linear-gradient(90deg,#fff 1px,transparent 1px);
+ background-size:44px 44px;
+ mask-image:linear-gradient(to bottom,#000,transparent 80%)
+}
+.wrap{width:min(1160px,92%);margin:auto}
+header{
+ position:fixed;top:0;left:0;right:0;z-index:10;background:#040611c9;
+ backdrop-filter:blur(18px);border-bottom:1px solid var(--line)
+}
+nav{height:74px;display:flex;align-items:center;justify-content:space-between}
+.logo{display:flex;align-items:center;gap:11px;font-weight:900;letter-spacing:.15em}
+.logo img{width:42px;height:42px;object-fit:cover;border-radius:50%}
+.links a{color:#bac4df;text-decoration:none;margin-left:24px;font-size:13px}
+.links a:hover{color:var(--cyan)}
+.hero{
+ min-height:100vh;padding:125px 0 75px;display:grid;
+ grid-template-columns:1fr 1fr;gap:52px;align-items:center
+}
+.badge{
+ display:inline-flex;align-items:center;gap:8px;padding:9px 13px;border-radius:999px;
+ border:1px solid #31e8ff45;background:#31e8ff0b;color:var(--cyan);
+ font-size:11px;font-weight:900;letter-spacing:.12em;text-transform:uppercase
+}
+.badge i{width:7px;height:7px;border-radius:50%;background:var(--good);box-shadow:0 0 13px var(--good)}
+h1{
+ font-size:clamp(58px,8vw,104px);line-height:.86;letter-spacing:-.075em;
+ margin:25px 0;background:linear-gradient(105deg,#fff 10%,#a9f4ff 53%,#b579ff 90%);
+ color:transparent;background-clip:text;-webkit-background-clip:text
+}
+.lead{font-size:19px;line-height:1.65;color:#c6cde3;max-width:610px}
+.buttons{display:flex;gap:13px;flex-wrap:wrap;margin-top:30px}
+.btn{
+ min-height:53px;padding:0 22px;border-radius:14px;display:inline-flex;
+ align-items:center;justify-content:center;text-decoration:none;font-weight:900;
+ transition:.2s transform,.2s box-shadow
+}
+.btn:hover{transform:translateY(-2px)}
+.primary{color:#021016;background:linear-gradient(100deg,var(--cyan),#a7f6ff);box-shadow:0 0 30px #31e8ff30}
+.secondary{color:white;border:1px solid #ffffff25;background:#ffffff08}
+.note{font-size:12px;color:#7f8bab;line-height:1.6;margin-top:13px}
+.visual{
+ position:relative;padding:7px;border-radius:28px;
+ background:linear-gradient(135deg,var(--cyan),var(--violet),var(--pink));
+ box-shadow:0 0 65px #31e8ff20
+}
+.visual img{display:block;width:100%;height:550px;object-fit:cover;border-radius:22px}
+.hud{
+ position:absolute;left:22px;right:22px;bottom:20px;padding:13px 15px;
+ border-radius:14px;background:#040611d9;border:1px solid #ffffff20;
+ backdrop-filter:blur(12px);display:flex;justify-content:space-between;
+ color:#aeb9d5;font-size:11px
+}
+.hud b{color:var(--good)}
+section{padding:82px 0}
+h2{font-size:clamp(31px,4vw,48px);letter-spacing:-.045em;margin:0 0 12px}
+.sub{color:var(--muted);line-height:1.7;max-width:760px}
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:31px}
+.card{
+ padding:26px;border-radius:20px;border:1px solid #31e8ff25;
+ background:linear-gradient(145deg,#121a3bdd,#080d20dd)
+}
+.icon{font-size:25px;color:var(--cyan);margin-bottom:16px}
+.card h3{margin:0 0 9px}.card p{margin:0;color:#aab4d0;font-size:14px;line-height:1.65}
+.proto{
+ display:grid;grid-template-columns:.8fr 1.2fr;gap:34px;align-items:center
+}
+.proto img{width:100%;max-height:330px;object-fit:cover;border-radius:22px;border:1px solid #ff45d844}
+.box{
+ padding:30px;border-radius:22px;border:1px solid #9a72ff50;
+ background:linear-gradient(120deg,#28184d66,#092c3b55)
+}
+.box h3{font-size:23px;margin:0 0 11px}
+.box p{color:#c0c9df;line-height:1.7;margin:0}
+.download{
+ text-align:center;padding:62px 25px;border-radius:28px;
+ border:1px solid #31e8ff3b;
+ background:radial-gradient(ellipse at top,#164a7066,transparent 65%),#0a1026
+}
+.download p{max-width:700px;margin:13px auto 25px;color:var(--muted);line-height:1.7}
+.dc{display:flex;justify-content:center;align-items:center;gap:11px;margin-top:27px;color:#8994b1;font-size:13px}
+.dc img{width:52px;height:52px;border-radius:50%;object-fit:cover}
+footer{padding:35px 0 50px;text-align:center;border-top:1px solid var(--line);color:#74809f;font-size:12px}
+@media(max-width:850px){
+ .hero,.proto{grid-template-columns:1fr}
+ .cards{grid-template-columns:1fr}
+ .hero{padding-top:110px}
+ .visual{max-width:650px;margin:auto}
+ .links{display:none}
+}
+@media(max-width:520px){
+ .hero{gap:32px}.buttons .btn{width:100%}.visual img{height:auto;max-height:620px}
+ .hud{font-size:9px}
+}
+</style>
+</head>
+<body>
+
+<header>
+<nav class="wrap">
+  <div class="logo">
+    <img src="dc-laboratorio.jpg" alt="DC Laboratorio">
+    <span>LUCY</span>
+  </div>
+  <div class="links">
+    <a href="#funciones">Funciones</a>
+    <a href="#prototipo">Prototipo</a>
+    <a href="#descarga">Descargar</a>
+  </div>
+</nav>
+</header>
+
+<main>
+
+<section class="hero wrap">
+  <div>
+    <div class="badge"><i></i> Prototipo funcional · Android</div>
+    <h1>LUCY</h1>
+    <p class="lead">
+      El comienzo de una nueva asistente inteligente. Conoce la primera versión
+      funcional de LUCY: una muestra de su diseño, concepto y funciones básicas
+      mientras la verdadera versión continúa en desarrollo.
+    </p>
+
+    <div class="buttons">
+      <a class="btn primary" href="lucy.apk" download>↓ Descargar APK</a>
+      <a class="btn secondary" href="#funciones">Conocer LUCY →</a>
+    </div>
+
+    <p class="note">
+      Versión de demostración · La aplicación completa todavía está en desarrollo.
+    </p>
+  </div>
+
+  <div class="visual">
+    <img src="lucy-centro-de-mando.png" alt="LUCY analizando información en su centro de mando">
+    <div class="hud">
+      <span>ESTADO: <b>PROTOTIPO ACTIVO</b></span>
+      <span>DC LABORATORIO · LUCY</span>
+    </div>
+  </div>
+</section>
+
+<section id="funciones">
+<div class="wrap">
+  <h2>Esto es solo el principio.</h2>
+  <p class="sub">
+    El prototipo permite mostrar la idea central de LUCY y su experiencia inicial.
+    Las capacidades avanzadas que tendrá la versión definitiva todavía están siendo desarrolladas.
+  </p>
+
+  <div class="cards">
+    <article class="card">
+      <div class="icon">⌁</div>
+      <h3>Análisis inteligente</h3>
+      <p>Una experiencia diseñada para consultar información, organizar datos y mostrar resultados de forma clara.</p>
+    </article>
+    <article class="card">
+      <div class="icon">◇</div>
+      <h3>Conectividad</h3>
+      <p>Una base preparada para incorporar herramientas, fuentes de información y nuevas funciones.</p>
+    </article>
+    <article class="card">
+      <div class="icon">✦</div>
+      <h3>Asistencia</h3>
+      <p>La primera etapa de una asistente que irá creciendo conforme avance el desarrollo de LUCY.</p>
+    </article>
+  </div>
+</div>
+</section>
+
+<section id="prototipo">
+<div class="wrap proto">
+  <img src="circuito-neon.jpeg" alt="Circuito tecnológico de DC Laboratorio">
+  <div class="box">
+    <h3>¿Qué estás descargando?</h3>
+    <p>
+      Estás descargando el <strong>prototipo de LUCY</strong>. Esta aplicación
+      todavía no representa la versión completa: muestra solamente las funciones
+      básicas y la experiencia inicial que tendrá LUCY.
+    </p>
+    <p style="margin-top:13px">
+      <strong>Estado:</strong> prototipo funcional. La versión verdadera de LUCY
+      continúa en desarrollo y podrá incorporar muchas más capacidades.
+    </p>
+    <p style="margin-top:13px">
+      <strong>Nota de seguridad:</strong> el APK incluido es el archivo proporcionado
+      para este prototipo. No se realiza aquí una certificación independiente de
+      seguridad. Instálalo únicamente si confías en su origen y revisa los permisos
+      que solicite Android.
+    </p>
+  </div>
+</div>
+</section>
+
+<section id="descarga">
+<div class="wrap">
+  <div class="download">
+    <div class="badge">Android · LUCY Prototype</div>
+    <h2 style="margin-top:18px">Prueba LUCY</h2>
+    <p>
+      Descubre lo básico de lo que será LUCY. Descarga el prototipo y conoce
+      su primera experiencia mientras trabajamos en la versión definitiva.
+    </p>
+    <a class="btn primary" href="lucy.apk" download>↓ Descargar LUCY APK</a>
+    <p class="note">
+      Archivo incluido: <strong>lucy.apk</strong>
+    </p>
+
+    <div class="dc">
+      <img src="dc-laboratorio.jpg" alt="DC Laboratorio">
+      <span>Un proyecto de <strong>DC Laboratorio</strong></span>
+    </div>
+  </div>
+</div>
+</section>
+
+</main>
+
+<footer>
+  © 2026 LUCY · DC Laboratorio · Prototipo en desarrollo
+</footer>
+
+</body>
+</html>
